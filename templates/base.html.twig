@@ -1,0 +1,53 @@
+{# templates/base.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link
+            rel="stylesheet"
+
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+        {% block stylesheets %}
+            {# 'app' must match the first argument to addEntry() in webpack.config.js #}
+            {{ encore_entry_link_tags('app')  }}
+            <!-- Renders a link tag (if your module requires any CSS)
+                 <link rel="stylesheet" href="/build/app.css"> -->
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+
+            <!-- Renders app.js & a webpack runtime.js file
+                <script src="/build/runtime.js" defer></script>
+                <script src="/build/app.js" defer></script>
+                See note below about the "defer" attribute -->
+        {% endblock %}
+</head>
+<body>
+<nav
+        class="navbar navbar-expand-lg navbar-light bg-light"
+        style="height: 70px;"
+>
+    <a class="navbar-brand" href="#">Symfony</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent"></div>
+    <ul class="nav navbar-nav navbar-right">
+        <AmpContent>
+            {% if app.user != null %}
+                <li><a class="nav-link" href="{{ path('list') }}">View List</a></li>
+                <li><a class="nav-link" href="{{ path('app_logout') }}">Logout</a></li>
+            {% endif %}
+        </AmpContent>
+
+        <NonAmpContent>
+            {% if app.user == null %}
+                <li><a class="nav-link" href="{{ path('app_login') }}">Login</a></li>
+                <li><a class="nav-link" href="{{ path('registration') }}">Register</a></li>
+            {% endif %}
+        </NonAmpContent>
+    </ul>
+</nav>
+{% block body %}{% endblock %}
+</body>
+</html>
