@@ -33,3 +33,5 @@ security:
         - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
         - { path: /api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/list, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/company, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/employees, roles: IS_AUTHENTICATED_FULLY }
