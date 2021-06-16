@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class CompanyType extends AbstractType
 {
@@ -18,7 +19,11 @@ class CompanyType extends AbstractType
         $builder
             ->add('name')
             ->add('email')
-            ->add('path', FileType::class, array('data_class' => null,'label' => 'Logo','required' => false))
+            ->add('imageFile', VichImageType::class, [
+                'required' => false,
+                'label' => 'Logo',
+                'download_uri' => false,
+            ])
             // ...
             //->add('path')
             ->add('website');

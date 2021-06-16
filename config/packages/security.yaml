@@ -17,9 +17,19 @@ security:
             anonymous: true
             lazy: true
             provider: app_user_provider
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
                 target: /
+
+
+    access_control:
+        - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing the Swagger UI
+        - { path: /api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/list, roles: IS_AUTHENTICATED_FULLY }

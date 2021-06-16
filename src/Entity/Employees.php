@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Repository\EmployeesRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=EmployeesRepository::class)
+ * @ApiResource
  */
 class Employees
 {

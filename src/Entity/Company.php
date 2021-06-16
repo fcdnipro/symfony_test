@@ -5,12 +5,62 @@ namespace App\Entity;
 use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Controller\CreateMediaObjectAction;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=CompanyRepository::class)
+ * @Vich\Uploadable
+ * @ApiResource(
+ *     iri="http://schema.org/MediaObject",
+ *     normalizationContext={
+ *         "groups"={"media_object_read"}
+ *     },
+ *     collectionOperations={
+ *         "post"={
+ *             "controller"=CreateMediaObjectAction::class,
+ *             "deserialize"=false,
+ *             "security"="is_granted('ROLE_USER')",
+ *             "validation_groups"={"Default", "media_object_create"},
+ *             "openapi_context"={
+ *                 "requestBody"={
+ *                     "content"={
+ *                         "multipart/form-data"={
+ *                             "schema"={
+ *                                 "type"="object",
+ *                                 "properties"={
+ *                                     "file"={
+ *                                         "type"="string",
+ *                                         "format"="binary"
+ *                                     },
+ *                                      "name" = {
+ *                                          "type" = "string"
+ *                                       },
+ *                                      "email" = {
+ *                                          "type" = "string"
+ *                                       },
+ *                                      "website" = {
+ *                                          "type" = "string"
+ *                                       },
+ *                                 }
+ *                             }
+ *                         }
+ *                     }
+ *                 }
+ *             }
+ *         },
+ *         "get"
+ *
+ *     },
+ *     itemOperations={
+ *         "get","put","delete","patch"
+ *     }
+ * )
  */
 class Company
 {
@@ -35,13 +85,14 @@ class Company
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Image(
-     *     minWidth = 100,
-     *     minHeight = 100,
-     * )
+     * @Vich\UploadableField(mapping="media_object", fileNameProperty="path")
+     * @var File|null
      */
+    public $imageFile;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
     private $path;
 
     /**
@@ -54,6 +105,8 @@ class Company
      * @ORM\OneToMany(targetEntity=Employees::class, mappedBy="company", orphanRemoval=true)
      */
     private $employees;
+
+
 
     public function __construct()
     {
@@ -112,7 +165,18 @@ class Company
 
         return $this;
     }
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     */
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+    }
 
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
     /**
      * @return Collection|Employees[]
      */

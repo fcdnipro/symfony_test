@@ -46,27 +46,8 @@ class CompanyController extends AbstractController
         $company = new Company();
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-                 /** @var UploadedFile $path */
-                $image = $form->get('path')->getData();
-                if ($image) {
-                    $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = $slugger->slug($originalFilename);
-                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $image->guessExtension();
-
-                    try {
-                        $image->move(
-                            $this->getParameter('image_directory'),
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-
-                    }
-                    $company->setPath($newFilename);
-                }
-
             $entityManager->persist($company);
             $entityManager->flush();
 
@@ -94,30 +75,10 @@ class CompanyController extends AbstractController
      */
     public function edit(Request $request, Company $company, SluggerInterface $slugger): Response
     {
-        $company->setPath(
-            new UploadedFile($this->getParameter('image_directory').'\\'.$company->getPath(),'image/jpeg')
-        );
-
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $image = $form->get('path')->getData();
-            if ($image) {
-                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $image->guessExtension();
-
-                try {
-                    $image->move(
-                        $this->getParameter('image_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-
-                }
-                $company->setPath($newFilename);
-            }
             $entityManager->persist($company);
             $entityManager->flush();
             return $this->redirectToRoute('company_index');
