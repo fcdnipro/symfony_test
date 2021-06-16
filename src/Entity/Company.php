@@ -198,7 +198,6 @@ class Company
     public function removeEmployee(Employees $employee): self
     {
         if ($this->employees->removeElement($employee)) {
-            // set the owning side to null (unless already changed)
             if ($employee->getCompany() === $this) {
                 $employee->setCompany(null);
             }

@@ -24,19 +24,7 @@ class CompanyType extends AbstractType
                 'label' => 'Logo',
                 'download_uri' => false,
             ])
-            // ...
-            //->add('path')
             ->add('website');
-
-        /*$builder->get('path')
-            ->addModelTransformer(new CallbackTransformer(
-                function (?string $path) {
-                    return $path;
-                },
-                function (UploadedFile $path) {
-                    return new UploadedFile($path);
-                }
-            ));*/
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -15,7 +15,6 @@ class SecurityController extends AbstractController
 {
     /**
      * @Route("/", name="app_login")
-     * @param JWTTokenManagerInterface $JWTManager
      * @return Response
      */
     public function login( AuthenticationUtils $authenticationUtils): Response
